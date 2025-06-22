@@ -45,28 +45,36 @@ const Home = ({ currentQuery, initialData, tables }) => {
   const scrollToResult = () =>
     document.getElementById("resultado").scrollIntoView();
 
-  const onFormSubmit = async (formData) => {
-    const query = `${formData.type}-${formData.brand}-${formData.model}-${formData.year}-${formData.fuel}`;
-    if (currentQuery.indexOf(query) === -1) {
-      currentQuery.push(query);
-    }
+const onFormSubmit = async (formData) => {
+  const query = `${formData.type}-${formData.brand}-${formData.model}-${formData.year}-${formData.fuel}`;
+  if (currentQuery.indexOf(query) === -1) {
+    currentQuery.push(query);
+  }
+
+  if (typeof window !== "undefined" && typeof window.goatcounter?.count === "function") {
     window.goatcounter.count({
       path: `add-${currentQuery}`,
       event: true,
     });
-    loadResults(currentQuery);
-  };
+  }
 
-  const onRemoveResult = (vehicleQuery) => {
-    const index = currentQuery.indexOf(vehicleQuery);
-    currentQuery.splice(index, 1);
+  loadResults(currentQuery);
+};
+
+const onRemoveResult = (vehicleQuery) => {
+  const index = currentQuery.indexOf(vehicleQuery);
+  currentQuery.splice(index, 1);
+
+  if (typeof window !== "undefined" && typeof window.goatcounter?.count === "function") {
     window.goatcounter.count({
       path: `remove-${currentQuery}`,
       event: true,
     });
-    loadResults(currentQuery);
-  };
+  }
 
+  loadResults(currentQuery);
+};
+  
   const loadResults = (query) => {
     setData({});
     router.push(
